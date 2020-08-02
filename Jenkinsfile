@@ -37,7 +37,28 @@ try
                 bat 'dotnet build selnum.sln'
                    
             }
-            
+            stage('Zip the artifacts')
+            {
+                def archiveName = "${Version}.zip"
+                powershell "Compress-Archive -Path Dist\\* -CompressionLevel Fastest -DestinationPath $workspace\\$archiveName"
+
+                //artifactory.pushPackageToTRArtifactory("$Version", "pat/$BRANCH_NAME", "$BRANCH_NAME", "$archiveName")
+
+                //bat "git tag -a -f -m $BRANCH_NAME-$BUILD_DISPLAY_NAME b$BRANCH_NAME-$BUILD_DISPLAY_NAME"
+                //bat "git push -v ${git_vars.GIT_URL} --tags"
+            }
+			if(BRANCH_NAME.equals("devops1") || BRANCH_NAME.equals("develop"))
+            {
+                stage('Upload Artifacts for Veracode Scan')
+                {
+                    def packageName = "package.zip"
+                    powershell "Compress-Archive -Path Dist\\* -CompressionLevel Fastest -DestinationPath $workspace\\$packageName"
+                   // artifactory.pushPackageToTRArtifactory("$Version", "path/$BRANCH_NAME", "$BRANCH_NAME", "$packageName")
+
+				
+				}
+               
+            }
             
         }
     }
