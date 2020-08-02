@@ -17,8 +17,6 @@ try
                  def versionString = BRANCH_NAME+"."+BUILD_NUMBER
                 
                  currentBuild.displayName = versionString
-             
-                
             }
 
             //pull the source code from git tfs.
@@ -30,34 +28,16 @@ try
                 checkout scm
             }
              stage('Restore Packages')
-            {    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') 
-                             {
-                                   dir('EFileDiagnostics//Service')                
-                                   {
-                                       bat 'dotnet restore'
-                                   } 
-                             }
-                  echo "Coming out from Building stage"                
+            {    
+                bat 'dotnet restore'
 
             }
-            // stage('Build Project')
-            // {    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') 
-            //                  {
-            //                        dir('EFileDiagnostics//Service')                
-            //                        {
-            //                            bat 'dotnet build TRTA.Diagnostics.RuleEngine.sln'
-            //                        } 
-            //                  }
-            //       echo "Coming out from Building stage"                
-
-            // }
-            // stage('Send Out Notifications')
-            //  {     echo"Total URL - > "+"$BUILD_URL"
-
-            //        echo "Sending to darvebhat@gmail.com............"
-                      
-            //        echo "Done"
-            // }
+            stage('Build Project')
+            {                     
+                bat 'dotnet build selnum.sln'
+                   
+            }
+            
             
         }
     }
